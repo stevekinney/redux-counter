@@ -1,25 +1,36 @@
+import './styles.scss';
+
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 
-import { createStore } from 'redux';
+import { createStore, bindActionCreators } from 'redux';
 import { connect, Provider } from 'react-redux';
-
-import './styles.scss';
 
 const initialState = {
   count: 0,
 };
 
 const INCREMENT = 'INCREMENT';
+const DECREMENT = 'DECREMENT';
 
-const incrementValue = () => ({
+const increment = () => ({
   type: INCREMENT,
 });
 
+const decrement = () => ({
+  type: DECREMENT,
+});
+
 const reducer = (state = initialState, action) => {
-  if (action.type === INCREMENT) {
+  if (action.type == INCREMENT) {
     return {
       count: state.count + 1,
+    };
+  }
+
+  if (action.type == DECREMENT) {
+    return {
+      count: state.count - 1,
     };
   }
 
@@ -30,15 +41,13 @@ const store = createStore(reducer);
 
 class Counter extends Component {
   render() {
-    const { count, increment } = this.props;
-    console.log({ count, increment });
-
+    const { count, increment, decrement } = this.props;
     return (
       <main className="Counter">
         <p className="count">{count}</p>
         <section className="controls">
           <button onClick={increment}>Increment</button>
-          <button>Decrement</button>
+          <button onClick={decrement}>Decrement</button>
           <button>Reset</button>
         </section>
       </main>
@@ -49,13 +58,9 @@ class Counter extends Component {
 const mapStateToProps = state => {
   return state;
 };
-
-const mapDispatchToProps = dispatch => {
-  return {
-    increment() {
-      dispatch(incrementValue());
-    },
-  };
+const mapDispatchToProps = {
+  increment,
+  decrement,
 };
 
 const CounterContainer = connect(
